@@ -1,0 +1,11 @@
+# Ignore everything in this directory
+*
+# Except these files
+!.gitignore
+!README.md
+!*.obslib
+!mgs1a*
+!ody1a*
+._*
+ody1.obslib
+mgs1.obslib
