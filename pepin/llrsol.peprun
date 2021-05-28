@@ -1,0 +1,111 @@
+/SPECIAL
+lnkforts ?PATH llr.tsne
+ln -s data/apo.obslib fort.40
+/GO
+SOL ?RUNNUM - APOSOL PEPRUN - SOLUTION WITH APO LLR - ?ITER
+LAST UPDATED 2009/4/30
+
+*INCLUDE '?PATH/pepin/nmlst1.include'
+ JCT(29)=1          $ EARTH NUTATION TERMS
+ JCT(51)=2*0        $ NO MULTIPLE SOLUTIONS AND SUMMARY
+ JCT(51)=-1         $ GET POSTFIT RMS PER DATASET
+$                     OBSLIB DATA SETS AND PGM FLOW
+ NUMOBT=1,ICT(5)=0
+ IOBS0=40,IOBS2=50
+ IMAT0=60,61,62,63,64,65,66,67,68,69 NUMMT0=?NUMMT0
+ WGTMT0(?UNWGT)= ?UNCOUNT*?VAR1, $ DOWNWEIGHT A SELECTED DATASET OR MORE
+ IMAT1=0,IMAT2=80,
+ ICT(77)=1        $ PUNCH
+ ICT(80)=1
+ ICT(10)=0,0        $ PREDICT RESIDUALS
+ ICT(11)=0
+ ICT(13)=10         $ PREDICT FROM IOBS0
+ ICT(44)=1          $ A PRIORI INCLUDES IN INPUT STREAM 
+$                         START PARMS AND L-VECTORS
+*INCLUDE '?PATH/pepin/sscon.?ITER'
+*INCLUDE '?PATH/pepin/bltint.parms'
+  LPRM=3,10,31,32,43,44
+$$*INCLUDE '?PATH/pepin/dtb01.include'
+$$ $ LDT(45)=0,LDT(245)=0,LDT(445)=0  $ FIX UT1, XWOB AND YWOB AT 244255
+$$ LDT(201)=200*0   $ FIX ALL XWOB'S
+$$ LDT(125)=4*0,LDT(325)=4*0,LDT(525)=4*0  $ NO DATA FOR THESE
+$$ LDT(114)=0,LDT(314)=0,LDT(514)=0         $ NO DATA FOR THESE EITHER
+
+*OBJECT MERCURY
+*INCLUDE '?PATH/pepin/mercury.?ITER'
+$ L=6*1,
+*OBJECT VENUS
+*INCLUDE '?PATH/pepin/venus.?ITER'
+$ L=6*1,
+*OBJECT EMBARY
+*INCLUDE '?PATH/pepin/embary.?ITER'
+ L=1,1,1,0,1,1,
+*OBJECT EARTH-ROTATION
+*INCLUDE '?PATH/pepin/erotat.?ITER'
+$$  L(7)= 1,2,           $FREE CORE NUTATION
+$$        3,4,5,6,7,8,9,10, $ IN-PHASE NUTATION TERMS
+$$        11,12,13,14,15,16,17,18,  $ OUT-OF -PHASE NUTATION TERMS
+$$        $$ 19,20,         $ K/C FORTNIGHTLY AND K/C MONTHLY
+$$         22,23             $ PREC, OBLQ
+*OBJECT MARS
+*INCLUDE '?PATH/pepin/mars.?ITER'
+$ L=6*1,
+$$ L(7)=7,8,9             $ ADJUST MARS ROTATION PARAMETERS
+$$     12,13,14,15,16,17,
+*OBJECT JUPITER
+*INCLUDE '?PATH/pepin/jupiter.?ITER'
+$ L=6*1,
+*OBJECT SATURN
+*INCLUDE '?PATH/pepin/saturn.?ITER'
+$ L=6*1,
+*OBJECT URANUS
+*INCLUDE '?PATH/pepin/uranus.?ITER'
+*OBJECT NEPTUNE
+*INCLUDE '?PATH/pepin/neptune.?ITER'
+$$*OBJECT PLUTO
+$$*INCLUDE '?PATH/pepin/pluto.nbody311'
+*OBJECT MOON
+*INCLUDE '?PATH/pepin/moon.?ITER'
+ L=6*1,16,20
+ LC3=3*0,LS3=3*0,LJ2=0,LJ3=0     $ ADJUST MOON HARMONICS
+*OBJECT MOON-ROTATION
+*INCLUDE '?PATH/pepin/mrotat.?ITER'
+ L=1,1,1,1,1,1,3,4,6,7
+
+*SITES
+*INCLUDE '?PATH/pepin/fixstatn.?ITER'
+*INCLUDE '?PATH/pepin/moonsite.?ITER'
+$*INCLUDE '?PATH/pepin/nrmpoint.sites'
+*SPOTS
+*INCLUDE '?PATH/pepin/fixlandr.?ITER'
+$*INCLUDE '?PATH/pepin/mpfl.?ITER'
+*INCLUDE '?PATH/pepin/moonspot.?ITER'
+$ EVEN ADJUST THE ONES NORMALLY FIXED
+$MLRS MLRS 1985 10     1 0 0.
+*BIASES
+$*INCLUDE '?PATH/pepin/m9bias.?ITER'
+$*INCLUDE '?PATH/pepin/mpfbias.?ITER'
+*INCLUDE '?PATH/pepin/moonbias.?ITER'
+*APRIORI
+$*INCLUDE '?PATH/pepin/gehrels.apriori'
+$*INCLUDE '?PATH/pepin/litebelt.apriori'
+$*INCLUDE '?PATH/pepin/astden2.apriori'
+$*INCLUDE '?PATH/pepin/mercury.apriori'
+$*INCLUDE '?PATH/pepin/jupiter.apriori'
+$*INCLUDE '?PATH/pepin/saturn.apriori'
+$*INCLUDE '?PATH/pepin/uranus.apriori'
+$*INCLUDE '?PATH/pepin/neptune.apriori'
+$*INCLUDE '?PATH/pepin/sunhar.apriori'
+$$*INCLUDE '?PATH/pepin/longoff.apriori'
+$$*INCLUDE '?PATH/pepin/newlong.apriori'
+$*INCLUDE '?PATH/pepin/mpfxpdl.apriori'
+*INCLUDE '?PATH/pepin/llrsite3.apriori'
+$*INCLUDE '?PATH/pepin/vlbinut1.apriori'
+$*INCLUDE '?PATH/pepin/vlbinut2.apriori'
+*INCLUDE '?PATH/pepin/grail.apriori'
+*INCLUDE '?PATH/pepin/end.apriori'
+*MULTPAR
+$*INCLUDE '?PATH/pepin/raised.equate'
+$*INCLUDE '?PATH/pepin/maui.equate'
+#CORROW
+**END
