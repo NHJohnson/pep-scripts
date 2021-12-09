@@ -68,31 +68,17 @@ if __name__ == '__main__':
             if 'PRMTER' in line:
                 to_file(line, sscon)
                 # Force beta' and gamma' to follow beta and gamma
-                prmstring = re.search('PRMTER\( *(\d+)\)', line)
-                prmnum = int(prmstring.group(1))
-                if prmnum == 41:
-                    # newline = re.sub('PRMTER\( *\d+\)', 'PRMTER( 43)', line)
-                    if line[9:11] == '41': 
-                        # what circumstances are differentiated by this logic
-                        # is no longer clear to me. -NHJ
-                        to_file(' PRMTER( 43)=' + line[13:36] + '\n', sscon)
-                    else:
-                        to_file(' PRMTER( 43)=' + line[49:], sscon)
-                elif prmnum == 42:
-                    if line[9:11] == '42':
-                        to_file(' PRMTER( 44)=' + line[13:36] + '\n', sscon)
-                    else:
-                        to_file(' PRMTER( 44)=' + line[49:], sscon)
-                elif prmnum == 43:
-                    if line[9:11] == '43':
-                        to_file(' PRMTER( 41)=' + line[13:36] + '\n', sscon) 
-                    else:
-                        to_file(' PRMTER( 41)=' + line[49:], sscon)
-                elif prmnum == 44: 
-                    if line[9:11] == '44':
-                        to_file(' PRMTER( 42)=' + line[13:36] + '\n', sscon) 
-                    else:
-                        to_file(' PRMTER( 42)=' + line[49:], sscon)
+                prmstrings = list(re.finditer('PRMTER\( *(\d+)\)', line))
+                prmnum1 = int(prmstrings[0].group(1))
+                prmnum2 = int(prmstrings[1].group(1))
+                if prmnum1 in (41, 42):
+                    to_file(' PRMTER( %s)=' % (prmnum1+2) + line[13:39] + '\n', sscon)
+                if prmnum2 in (41, 42):
+                    to_file(' PRMTER( %s)=' % (prmnum2+2) + line[53:], sscon)
+                if prmnum1 in (43, 44):
+                    to_file(' PRMTER( %s)=' % (prmnum1-2) + line[13:39] + '\n', sscon) 
+                if prmnum2 in (43, 44):
+                    to_file(' PRMTER( %s)=' % (prmnum2-2) + line[53:], sscon) 
 
             if 'NAME' in line:
                 nameflag = 1
